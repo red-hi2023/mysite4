@@ -15,7 +15,7 @@ public class UserDao {
 	//로그인
 	public UserVo userSelectOne(UserVo userVo) {
 		System.out.println("UserDao.UserDao()");
-
+		
 		UserVo authUser = sqlSession.selectOne("user.selectAuthUser", userVo);
 		
 		return authUser;

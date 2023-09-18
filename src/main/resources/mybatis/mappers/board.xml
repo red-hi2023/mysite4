@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+
+	<!-- 전체리스트가져오기 -->
+	<select id="selectList" resultType="com.javaex.vo.BoardVo">
+		<![CDATA[
+			SELECT  BO.no,
+	        	    BO.title,
+	        	    BO.content,
+		        	US.name,
+		        	BO.hit,
+		        	TO_CHAR(BO.reg_date, 'YYYY-MM-DD HH:MI') regDate,
+	        		US.no userNo
+			FROM board BO, users US
+			WHERE  BO.user_no = US.no				 
+			order by reg_date desc
+		]]>
+	</select>
+	
+	<!-- 조회수 증가하기 -->
+	<update id="updateHit" parameterType="int">
+		<![CDATA[
+			update board
+			set hit = hit+1
+			where no = #{no}
+		]]>
+	</update>
+	
+	<!-- 글1개 가져오기 -->
+	<select id="selectOne" parameterType="int" resultType="com.javaex.vo.BoardVo">
+		<![CDATA[
+			select  b.no,
+			        b.title,
+			        b.content,
+			        b.hit,
+			        to_char(b.reg_date,'YYYY-MM-DD HH:MI') regDate,
+			        b.user_no userNo,
+			        u.name
+			from board b, users u
+			where b.user_no = u.no
+			and b.no = #{no}
+		]]>
+	</select>
+	
+	
+
+</mapper>
