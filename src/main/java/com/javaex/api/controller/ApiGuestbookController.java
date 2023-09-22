@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.service.GuestbookService;
@@ -38,6 +40,20 @@ public class ApiGuestbookController {
 		
 		return guestbookList;
 	}
+	
+	//방명록저장 ajax
+	@ResponseBody
+	@RequestMapping(value="/api/guestbook/add", method= {RequestMethod.GET, RequestMethod.POST})
+	public GuestbookVo add(@ModelAttribute GuestbookVo guestbookVo) {
+		System.out.println("ApiGuestbookController.add()");
+		
+		//all                          //name  password content
+		GuestbookVo gVo = guestbookService.addGuest(guestbookVo);
+		 
+		return gVo;
+	}
+	
+	
 	
 	
 }

@@ -26,7 +26,7 @@ public class GuestbookService {
 	// 방명록 글 저장
 	public int write(GuestbookVo guestbookVo) {
 		System.out.println("guestbookService/write");
-
+		
 		return guestbookDao.insert(guestbookVo);
 	}
 
@@ -45,6 +45,22 @@ public class GuestbookService {
 		}
 
 		return state;
+	}
+	
+	
+	//방명록 등록 ajax
+	public GuestbookVo addGuest(GuestbookVo guestbookVo) {
+		System.out.println("guestbookService/addGuest()");
+		
+		//등록
+		int count = guestbookDao.insertSelectKey(guestbookVo);
+
+		//no 의 데이터 가져오기
+		// no값 확인
+		int no = guestbookVo.getNo();
+		// no데이터 가져오기
+		
+		return guestbookDao.selectGuestOne(no);
 	}
 
 }

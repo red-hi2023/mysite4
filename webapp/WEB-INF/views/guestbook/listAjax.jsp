@@ -48,7 +48,7 @@
 				<!-- //content-head -->
 
 				<div id="guestbook">
-					<form action="" method="">
+					<form id="guestbookForm" action="" method="">
 						<table id="guestAdd">
 							<colgroup>
 								<col style="width: 70px;">
@@ -67,7 +67,7 @@
 									<td colspan="4"><textarea name="content" cols="72" rows="5"></textarea></td>
 								</tr>
 								<tr class="button-area">
-									<td colspan="4"><button type="submit">등록</button></td>
+									<td colspan="4"><button id="btnSubmit" type="submit">등록</button></td>
 								</tr>
 							</tbody>
 							
@@ -80,29 +80,9 @@
 					<!-- <button id="btnGetData">데이터가져오기</button> -->
 					
 					<div id="gbListArea">
-					
+						<!-- 리스트출력영역 -->
 					</div>
 					
-					<%-- 
-						<table class="guestRead">
-							<colgroup>
-								<col style="width: 10%;">
-								<col style="width: 40%;">
-								<col style="width: 40%;">
-								<col style="width: 10%;">
-							</colgroup>
-							<tr>
-								<td>1</td>
-								<td>정우성</td>
-								<td>2022-02-02</td>
-								<td><a href="">[삭제]</a></td>
-							</tr>
-							<tr>
-								<td colspan=4 class="text-left">정우성 다녀갑니다</td>
-							</tr>
-						</table>
-						<!-- //guestRead -->
-				   --%>
 
 				</div>
 				<!-- //guestbook -->
@@ -124,7 +104,7 @@
 //DOM이 완성되었을때 --> 그리기 직전
 $(document).ready(function(){
 	console.log("ready()");
-	fetchList(); 
+	fetchList(); //ajax통신을 이용해서 데이타를 요청하고 + 그린다(render())
 	console.log("ready()요청후");
 });
 
@@ -142,8 +122,78 @@ $("#btnGetData").on("click", function(){
 	console.log("버튼클릭");
 	
 	//fetchList(); //ajax통신을 이용해서 데이타를 요청하고 + 그린다(render())
+});
+	
+//등록 버튼을 클릭했을때 
+//-->폼의 전송버튼일경우에는 from으로 잡아야하고 이벤트는 submit으로 해야된다
+$("#guestbookForm").on("submit", function(e){
+	console.log("등록버튼 클릭");
+	e.preventDefault(); //원래의 기능이 작동하지 않게 한다
+	
+	//데이타 수집
+	let name = $("#input-uname").val();
+	let pw = $("#input-pass").val();
+	let content = $('[name="content"]').val();
+
+	let guestbookVo = {
+		name: name,
+		password: pw,
+		content: content
+	}
+	
+	console.log(guestbookVo)
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath }/api/guestbook/add",		
+		type : "post",
+		/* contentType : "application/json", */
+		data : guestbookVo, 
+
+		dataType : "json",
+		success : function(guestbookVo){
+			/*성공시 처리해야될 코드 작성*/
+			console.log(guestbookVo);
+			
+			//그리기
+			render(guestbookVo, "up");
+			
+			//초기화
+			$("#input-uname").val("");
+			$("#input-pass").val("");
+			$('[name="content"]').val("");
+		},
+		error : function(XHR, status, error) {
+			console.error(status + " : " + error);
+		}
+	});
+});
+	 
+//삭제버튼 눌렀을때
+$("#gbListArea").on("click", ".btnDelForm", function(){
+	console.log("삭제버튼 클릭");
+	let password = window.prompt("비빌번호를 입력하세요");
+	console.log(password);
+	
+	//패스워드, no
+	//(event)=>
+	//console.log($(event.target));
+	
+	let $this = $(this);
+	let no = $this.data("no");
+	console.log($this);
+	
+	//ajax 요청 db를지운다
+	//과제
+	
+	//화면에서 지운다
+	$("#t"+no).remove();
 	
 });
+	
+
+
+
+
 	
 	
 //ajax통신을 이용해서 데이타를 요청하고 + 그린다(render())
@@ -163,7 +213,7 @@ function fetchList(){
 			console.log(guestbookList);
 			
 			for(let i=0; i<guestbookList.length; i++){
-				render(guestbookList[i]); //그리기	
+				render(guestbookList[i], "down"); //그리기	
 			}
 			
 		},
@@ -176,10 +226,10 @@ function fetchList(){
 	
 	
 //방명록 내용을 1개씩 그린다
-function render(guestbookVo){
+function render(guestbookVo, dir){
 	
 	let str ='';
-	str +='<table class="guestRead">';
+	str +='<table id=t'+guestbookVo.no +' class="guestRead">';
 	str +='    <colgroup>';
 	str +='        <col style="width: 10%;">';
 	str +='        <col style="width: 40%;">';
@@ -190,15 +240,24 @@ function render(guestbookVo){
 	str +='        <td>' + guestbookVo.no + '</td>';
 	str +='        <td>' + guestbookVo.name + '</td>';
 	str +='        <td>' + guestbookVo.regDate + '</td>';
-	str +='        <td><a href="">[삭제]</a></td>';
+	str +='        <td><button class="btnDelForm" data-no='+ guestbookVo.no +'>삭제</button></td>';
 	str +='    </tr>';
 	str +='    <tr>';
 	str +='        <td colspan=4 class="text-left">' + guestbookVo.content + '</td>';
 	str +='    </tr>';
 	str +='</table>';
 	
-	console.log("그린다");
-	$("#gbListArea").prepend(str);
+	if(dir=="up"){
+		$("#gbListArea").prepend(str);
+		
+	}else if(dir=="down"){
+		$("#gbListArea").append(str);	
+	
+	}else {
+		consoel.log("잘못입력")
+	}
+	
+	
 }
 	
 
