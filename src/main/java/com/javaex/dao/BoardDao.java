@@ -14,7 +14,7 @@ public class BoardDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	//게시판리스트 가져오기
+	//리스트(검색X,페이징 X)
 	public List<BoardVo> boardSelectList() {
 		System.out.println("BoardDao.boardSelectList()");
 		
@@ -23,6 +23,19 @@ public class BoardDao {
 		return boardList;
 		
 	}
+	
+	
+	public List<BoardVo> selectList() {
+		System.out.println("BoardDao>selectList()");
+
+		List<BoardVo> boardList = sqlSession.selectList("board.selectList");
+
+		return boardList;
+	}
+	
+	
+	
+	
 	
 	//조회수 증가
 	public int updateHit(int no) {

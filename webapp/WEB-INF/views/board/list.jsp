@@ -46,9 +46,9 @@
 	
 				<div id="board">
 					<div id="list">
-						<form action="" method="">
+						<form action="${pageContext.request.contextPath}/board/list2" method="">
 							<div class="form-group text-right">
-								<input type="text">
+								<input type="text" name="keyword">
 								<button type="submit" id=btn_search>검색</button>
 							</div>
 						</form>

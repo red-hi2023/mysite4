@@ -14,7 +14,7 @@ public class BoardService {
 	@Autowired
 	private BoardDao boardDao;
 	
-	//게시판 리스트 가져오기
+	//리스트(검색X,페이징 X)
 	public List<BoardVo> getBoardList(){
 		System.out.println("BoardService.getBoardList()");
 		
@@ -23,6 +23,9 @@ public class BoardService {
 		return boardList;
 		
 	}
+	
+	
+	
 	
 	
 	//글 1개 가져오기
