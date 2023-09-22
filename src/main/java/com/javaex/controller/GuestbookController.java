@@ -19,9 +19,9 @@ public class GuestbookController {
 	private GuestbookService guestbookService;
 
 	// 방명록 리스트 가져오기
-	@RequestMapping(value = "/list")
-	public String list(Model model) {
-		System.out.println("guestbookController/list");
+	@RequestMapping(value = "/addList")
+	public String addList(Model model) {
+		System.out.println("guestbookController/addList");
 
 		// 서비스를 통해 모든 방명록 글 가져오기
 		List<GuestbookVo> guestbookList = guestbookService.getGuestList();
@@ -55,11 +55,7 @@ public class GuestbookController {
 		System.out.println("guestbookController/delete");
 
 		guestbookService.removeGuest(guestbookVo);
-		return "redirect:/guestbook/list";
+		return "redirect:/guestbook/addList";
 	}
 
-	@RequestMapping(value = "/listAjax")
-	public String list() {
-		return "guestbook/listAjax";
-	}
 }

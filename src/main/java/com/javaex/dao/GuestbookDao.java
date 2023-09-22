@@ -24,12 +24,6 @@ public class GuestbookDao {
 
 	}
 
-	// 방명록 글1개 가져오기
-	public GuestbookVo selectGuestbook(int no) {
-		System.out.println("guestbookDao/selectGuestbook");
-
-		return sqlSession.selectOne("guestbook.selectByNo", no);
-	}
 
 	// 방명록 글 저장
 	public int insert(GuestbookVo guestbookVo) {
@@ -38,21 +32,6 @@ public class GuestbookDao {
 		return sqlSession.insert("guestbook.insert", guestbookVo);
 	}
 
-	// 방명록 저장(ajax)
-	public int insertGuest(GuestbookVo guestbookVo) {
-		System.out.println("GuestbookDao>insertGuest()");
-
-		int count = sqlSession.insert("guestbook.insertSelectKey", guestbookVo);
-
-		return count;
-	}
-
-	// 방명록 저장후 등록한 데이타 가져오기(ajax)
-	public GuestbookVo getGuest(int no) {
-		System.out.println("GuestbookDao>getGuest()");
-
-		return sqlSession.selectOne("guestbook.getGuest", no);
-	}
 
 	// 방명록 삭제
 	public int guestDelete(GuestbookVo guestbookVo) {

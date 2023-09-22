@@ -77,7 +77,12 @@
 					</form>	
 					
 					
-					<button id="btnGetData">데이터가져오기</button>
+					<!-- <button id="btnGetData">데이터가져오기</button> -->
+					
+					<div id="gbListArea">
+					
+					</div>
+					
 					<%-- 
 						<table class="guestRead">
 							<colgroup>
@@ -116,10 +121,33 @@
 </body>
 
 <script type="text/javascript">
+//DOM이 완성되었을때 --> 그리기 직전
+$(document).ready(function(){
+	console.log("ready()");
+	fetchList(); 
+	console.log("ready()요청후");
+});
+
+//화면을 그리고 난후
+$(window).load(function(){
+	console.log("load()");
+//	fetchList();
+
+	console.log("load()요청후");
+});
+
 
 //임시버튼을 클릭했을때
 $("#btnGetData").on("click", function(){
 	console.log("버튼클릭");
+	
+	//fetchList(); //ajax통신을 이용해서 데이타를 요청하고 + 그린다(render())
+	
+});
+	
+	
+//ajax통신을 이용해서 데이타를 요청하고 + 그린다(render())
+function fetchList(){
 	
 	//서버로 부터 방명록 데이타만 받고 싶다 ajax요청
 	$.ajax({
@@ -129,20 +157,50 @@ $("#btnGetData").on("click", function(){
 		/* data : {name: "홍길동"}, */
 		
 		dataType : "json",
-		success : function(result){
+		success : function(guestbookList){
 			/*성공시 처리해야될 코드 작성*/
+			//리스트받기
+			console.log(guestbookList);
+			
+			for(let i=0; i<guestbookList.length; i++){
+				render(guestbookList[i]); //그리기	
+			}
+			
 		},
 		error : function(XHR, status, error) {
 			console.error(status + " : " + error);
 		}
 	});
-	
-	
-	
-	
-	
-});
 
+}
+	
+	
+//방명록 내용을 1개씩 그린다
+function render(guestbookVo){
+	
+	let str ='';
+	str +='<table class="guestRead">';
+	str +='    <colgroup>';
+	str +='        <col style="width: 10%;">';
+	str +='        <col style="width: 40%;">';
+	str +='        <col style="width: 40%;">';
+	str +='        <col style="width: 10%;">';
+	str +='    </colgroup>';
+	str +='    <tr>';
+	str +='        <td>' + guestbookVo.no + '</td>';
+	str +='        <td>' + guestbookVo.name + '</td>';
+	str +='        <td>' + guestbookVo.regDate + '</td>';
+	str +='        <td><a href="">[삭제]</a></td>';
+	str +='    </tr>';
+	str +='    <tr>';
+	str +='        <td colspan=4 class="text-left">' + guestbookVo.content + '</td>';
+	str +='    </tr>';
+	str +='</table>';
+	
+	console.log("그린다");
+	$("#gbListArea").prepend(str);
+}
+	
 
 </script>
 

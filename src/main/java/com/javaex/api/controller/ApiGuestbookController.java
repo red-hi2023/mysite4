@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.service.GuestbookService;
 import com.javaex.vo.GuestbookVo;
@@ -26,15 +27,16 @@ public class ApiGuestbookController {
 	}
 	
 	//방명록 데이터만 가져오기(데이터만 전송) ajax
+	@ResponseBody
 	@RequestMapping(value="/api/guestbook/list", method= {RequestMethod.GET, RequestMethod.POST})
-	public String list() {
+	public List<GuestbookVo> list() {
 		System.out.println("ApiGuestbookController.list()");
 		
 		//전체방명록 데이터 가져오기
 		List<GuestbookVo> guestbookList = guestbookService.getGuestList();
 		System.out.println(guestbookList);
 		
-		return "";
+		return guestbookList;
 	}
 	
 	
