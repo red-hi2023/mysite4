@@ -50,8 +50,7 @@
 	
 				<div id="user">
 					<div id="joinForm">
-						<form action="" method="">
-	
+						<form id="formJoin" action="${pageContext.request.contextPath}/user/join" method="get">
 							<!-- 아이디 -->
 							<div class="form-group">
 								<label class="form-text" for="input-uid">아이디</label> 
@@ -63,13 +62,13 @@
 							<!-- 비밀번호 -->
 							<div class="form-group">
 								<label class="form-text" for="input-pass">패스워드</label> 
-								<input type="text" id="input-pass" name="" value="" placeholder="비밀번호를 입력하세요"	>
+								<input type="text" id="input-pass" name="password" value="" placeholder="비밀번호를 입력하세요"	>
 							</div>
 	
 							<!-- 이메일 -->
 							<div class="form-group">
 								<label class="form-text" for="input-name">이름</label> 
-								<input type="text" id="input-name" name="" value="" placeholder="이름을 입력하세요">
+								<input type="text" id="input-name" name="name" value="" placeholder="이름을 입력하세요">
 							</div>
 	
 							<!-- //나이 -->
@@ -77,10 +76,10 @@
 								<span class="form-text">성별</span> 
 								
 								<label for="rdo-male">남</label> 
-								<input type="radio" id="rdo-male" name="" value="" > 
+								<input type="radio" id="rdo-male" name="gender" value="male" > 
 								
 								<label for="rdo-female">여</label> 
-								<input type="radio" id="rdo-female" name="" value="" > 
+								<input type="radio" id="rdo-female" name="gender" value="female" > 
 	
 							</div>
 	
@@ -88,7 +87,7 @@
 							<div class="form-group">
 								<span class="form-text">약관동의</span> 
 								
-								<input type="checkbox" id="chk-agree" value="" name="">
+								<input type="checkbox" id="chk-agree"  name="agree" value="yes">
 								<label for="chk-agree">서비스 약관에 동의합니다.</label> 
 							</div>
 							
@@ -120,7 +119,6 @@ $("#btnIdCheck").on("click", function(){
 	console.log("버튼클릭");
 	
 	let id = $("#input-uid").val();
-	
 
 	$.ajax({
 		
@@ -129,19 +127,24 @@ $("#btnIdCheck").on("click", function(){
 		/* contentType : "application/json", */
 		data : {id: id},
 
-		dataType : "text",   /* text */
-		success : function(result){
+		dataType : "json",
+		success : function(jsonResult){
 			/*성공시 처리해야될 코드 작성*/
-			console.log(result);
-			if(result == "true"){
- 				$("#checkResult").text("사용할수 있는 id입니다.");	
- 				
-			}else if(result == "false"){
-				$("#checkResult").text("사용할수 없는 id입니다.");
+			console.log(jsonResult);
 			
-			}else{
-				console.log("잘못된 처리");
+			if(jsonResult.result=="success"){//정상적인 통신 성공
+				if(jsonResult.data == true){
+					$("#checkResult").text("사용할수 있는 id입니다.");	
+				}else if(jsonResult.data == false){
+					$("#checkResult").text("사용할수 없는 id입니다.");
+				}else{
+					console.log("잘못된 처리");
+				}
+				
+			}else if(jsonResult.result=="fail"){//정상적인 통신X
+				console.log("통신오류")
 			}
+			
 			
 		},
 		error : function(XHR, status, error) {
@@ -149,9 +152,42 @@ $("#btnIdCheck").on("click", function(){
 		}
 	});
 
-	
-	
 });
+
+
+//회원가입 버튼 클릭할때 (submit버튼은 form에 클릭이벤트)
+$("#formJoin").on("submit", function(){
+	console.log("회원가입 버튼 클릭");
+	
+	//id를 입력안했을때
+	let id = $("#input-uid").val();
+	if(id == "" || id==null){
+		alert("아이디를 입력하세요");
+		return false;
+	}
+	
+	//패스워드 입력안했을때
+	let pw = $("#input-pass").val();
+	if(pw =="" || pw==null){
+		alert("패스워드를 입력하세요");
+		return false;
+	}else if(pw.length < 8){
+		alert("패스워드를 8글자 이상 입력해주세요");
+		return false;
+	}
+	
+	//약관동의
+	let agree = $("#chk-agree").is(":checked")
+	if(agree==false){
+		alert("약관에 동의해 주세요");
+		return false;
+	}
+	
+	//submit의 원래전송을 하지 않아야 할때 return false;
+	return true;
+});
+
+
 </script>
 
 

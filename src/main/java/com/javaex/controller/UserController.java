@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.service.UserService;
+import com.javaex.vo.JsonResultVo;
 import com.javaex.vo.UserVo;
 
 @Controller
@@ -44,12 +45,16 @@ public class UserController {
 	@RequestMapping(value = "/join", method = { RequestMethod.GET, RequestMethod.POST })
 	public String join(@ModelAttribute UserVo userVo) {
 		System.out.println("UserController>join()");
-
+		System.out.println(userVo);
+		
 		int count = userService.join(userVo);
 
 		return "user/joinOk";
 	}
 
+	
+	
+	
 	// 회원가입폼
 	@RequestMapping(value = "/joinForm", method = { RequestMethod.GET, RequestMethod.POST })
 	public String joinForm() {
@@ -61,21 +66,23 @@ public class UserController {
 	//idcheck
 	@ResponseBody
 	@RequestMapping(value = "/idCheck", method = { RequestMethod.GET, RequestMethod.POST })
-	public boolean idCheck(@RequestParam(value="id") String id) {
+	public JsonResultVo idCheck(@RequestParam(value="id") String id) {
 		System.out.println("UserController>idCheck()");
 
 		//true 사용가능,  false 사용불가
 		boolean check = userService.idCheck(id);
 		System.out.println(check);
+	
+		JsonResultVo jsonResultVo = new JsonResultVo();
+		jsonResultVo.success(check);
+			
 		
-		return check;
+		return jsonResultVo;
 	}
 	
 	
 	
-	
-	
-	
+
 	
 	
 
