@@ -13,5 +13,30 @@
 			and password= #{password}
 		]]>
 	</select>
-
+	
+	
+	<!-- 회원정보 저장(회원가입)-->
+	<insert id="insert" parameterType="com.javaex.vo.UserVo">
+		<![CDATA[
+			insert into users
+			values(seq_users_no.nextval, #{id}, #{password}, #{name}, #{gender})
+		]]>
+	</insert>
+	
+	
+	<!-- id체크 -->
+	<select id="selectUserOneById" parameterType="string" resultType="com.javaex.vo.UserVo">
+		<![CDATA[
+			select  no,
+			        id,
+			        name,
+			        gender
+			from users
+			where id=#{id}
+		]]>		
+	</select>
+	
+	
+	
+	
 </mapper>

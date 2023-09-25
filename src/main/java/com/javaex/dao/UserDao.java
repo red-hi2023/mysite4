@@ -22,4 +22,31 @@ public class UserDao {
 	}
 	
 	
+	
+	//회원정보 저장(회원가입)
+	public int userInsert(UserVo userVo) {
+		System.out.println("UserDao.userInsert()");
+		
+		int count = sqlSession.insert("user.insert", userVo);
+		
+		return count;
+	}
+	
+
+	//id체크
+	public UserVo selectUserOneById(String id) {
+		System.out.println("UserDao.selectUserOneById()");
+		
+		UserVo userVo = sqlSession.selectOne("user.selectUserOneById", id);
+		
+		return userVo;
+	}
+	
 }
+
+
+
+
+
+
+
